@@ -4,7 +4,6 @@ const saleSchema = new mongoose.Schema(
   {
     total: {
       type: Number,
-      unique: true,
       required: true,
     },
     description: {
