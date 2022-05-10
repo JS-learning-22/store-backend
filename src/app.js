@@ -1,5 +1,10 @@
-const express = require("express");
-const cors = require("cors");
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
+
+import models, { connectDb } from "./config/db.js";
+
+dotenv.config();
 
 const app = express();
 
@@ -14,8 +19,13 @@ app.get("/", async (_, res) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, async () => {
-  console.log(`The application is running ${PORT}`);
+connectDb().then(async () => {
+  if (process.env.SYNCDATABASE) {
+    await Promise.all([models.Sale.deleteMany({})]);
+  }
+  app.listen(process.env.PORT, async () => {
+    console.log(`Example app listening on port ${process.env.PORT}!`);
+  });
 });
+
+export default app;
